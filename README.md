@@ -2,6 +2,9 @@
 documentation for certain features can be found [here](<https://github.com/Xello-Blue/docs/tree/main>) (may be outdated)
 
 # Setup
+### Requirements:
+1. Python 3.10+ ([download here](<https://www.python.org/downloads/>))
+2. Required libraries
 
 ## Configuration
 • The config file is located at "localstorage/config.json"
