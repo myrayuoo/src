@@ -1,0 +1,56 @@
+[
+  {
+    "username": "user",
+    "token": "2fff25335e5b490735302f06d3cf1e8ea1e04c9e4a61d5b06dd10d55ceb37114",
+    "password": "638ad38c0044b2470df46ac9361a87056c30b9ae82086f0cce1653a5204115c0",
+    "posts": [],
+    "uid": 1,
+    "uuid": "8fc1c2ed-8ac9-434e-a77d-f8e21dbd1989",
+    "discord": {
+      "id": 0,
+      "discriminator": "",
+      "username": "",
+      "email": ""
+    },
+    "domain": {
+      "domain": "xello.blue",
+      "subdomain": "i.",
+      "random": false,
+      "randomDomains": [
+        "xello.blue",
+        "ketamine.top",
+        "drifty.wtf"
+      ]
+    },
+    "hidden_url": true,
+    "url_settings": {
+      "emojiUrl": false
+    },
+    "embed": {
+      "enabled": false,
+      "color": "#A89FFF",
+      "title": "XelloBlue",
+      "description": "Uploaded by %user%"
+    },
+    "profile": {
+      "bio": "",
+      "show_discord": true,
+      "font": "Rubik",
+      "theme": "dark"
+    },
+    "permissionlvl": 0,
+    "badges": [],
+    "_2fa": {
+      "enabled": false,
+      "active": false,
+      "code": ""
+    },
+    "invite_meta": {
+      "code": "bf4f169c-7d09-4624-88e1-bf4eccb49569",
+      "createdBy": "1f7b8261-359f-4a1e-8636-2eb3d4169a16",
+      "usedBy": "8fc1c2ed-8ac9-434e-a77d-f8e21dbd1989"
+    },
+    "invite_created": [],
+    "sharify_invite": "FAILED TO GENERATE"
+  }
+]

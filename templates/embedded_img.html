@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{img}}</title>
+
+    <meta content="{{title}}" property="og:title" />
+    <meta content="{{description}}" property="og:description" />
+    <meta content="https://xello.blue/" property="og:url" />
+    <meta content="{{color}}" data-react-helmet="true" name="theme-color" />
+    <meta property="og:image" content="https://ketamine.top/usercontent/{{img}}">
+    <meta property="twitter:card" content="summary_large_image"/>
+    <meta content="/icon.png" property="og:image" />
+</head>
+<body>
+    <style>
+        @import url("/style.css");
+
+        .imgcenter img {
+            width: 50%;
+        }
+
+        .imgcenter {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+
+    <div class="imgcenter">
+        <img src="/usercontent/{{img}}">
+        <p>Uploaded by {{username}}</p>
+    </div>
+</body>
+</html>

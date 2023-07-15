@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="google" content="notranslate">
+		<meta property="og:type" content="website">
+		<meta property="og:title" content="Xello.Blue">
+		<meta property="og:description" content="Dashboard">
+		<meta property="og:image" content="/icon.png">
+		<meta content="#07A1FF" data-react-helmet="true" name="theme-color" />
+
+		<title>XelloBlue</title>
+		<meta name="description" content="Dashboard">
+		<link rel="icon" href="/icon.png" />
+		<meta property="twitter:image" content="https://cdn.discordapp.com/attachments/795963185231560727/880856367139799060/ba819d4fe9c8967f3f86ffe587db7a96.png" />
+		<script src="https://kit.fontawesome.com/b801578fa3.js" crossorigin="anonymous"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+
+<body>
+	<style>
+		@import url("style.css");
+	</style>
+	
+	<!-- SCRIPTS -->
+	<script>
+		//VARS 
+        const enabled = '<i class="SWITCH fa-solid fa-toggle-on enabled"></i>';
+        const disabled = '<i class="SWITCH fa-solid fa-toggle-off disabled"></i>';
+        var show_discord = false;
+		const autoLoad = true;        
+
+        function load() {
+            if (autoLoad) {
+				loadProfile();
+				loadEmbeds();
+				loadUploads();
+			}
+        }
+		
+        //PROFILE
+        var profileLoaded = false;
+        function loadProfile() {
+            //LOADING BIO
+            document.getElementById("bio-input").value = "{{bio}}";
+            if (document.getElementById("bio-input").value == "") {
+                document.getElementById("bio-input").value = "No bio"
+            }
+            profileLoaded = true;
+        }
+
+        //EMBEDS
+        var embedsLoaded = false;
+        function loadEmbeds() {
+            if ("{{setting_embed}}" == "True") {
+                embedStatus = true;
+                document.getElementById("EMBED").innerHTML = enabled;
+            } else {
+                embedStatus = false;
+                document.getElementById("EMBED").innerHTML = disabled;
+            }
+
+            document.getElementById("embed-title").value = "{{setting_embed_title}}";
+            document.getElementById("embed-description").value = "{{setting_embed_description}}";
+            embedsLoaded = true;
+        }
+
+
+        //UPLOADS
+        var uploadsLoaded = false;
+        function loadUploads() {
+            loadHiddenURL();
+            loadDomain();
+            uploadsLoaded = true;
+        }
+
+
+        function loadHiddenURL() {
+            var importedHiddenURL = "{{setting_hidden_url}}";
+            if (importedHiddenURL == "True") {
+                //hiddenUrlStatus = true;
+                document.getElementById("HIDEURL").innerHTML = enabled;
+            } else {
+                //hiddenUrlStatus = false;
+                document.getElementById("HIDEURL").innerHTML = disabled;
+            }
+        }
+	</script>
+
+	
+<script>
+
+	//SCRIPTS
+
+	//DISCORD VERIFY
+	function verifyDiscord() {
+		toast("Processing account verification")
+		xhr = new XMLHttpRequest;
+		xhr.open("POST", "/oauth2/discord/verify")
+
+		xhr.onload = function () {
+			if (this.status == 204) {
+				toast("Account verified!", "success");
+			} else {
+				toast(JSON.parse(this.responseText).msg, "error");
+			}
+		}
+
+		xhr.send();
+	}
+
+	//SHAREX CONFIG
+	function downloadConfig() {
+		xhr = new XMLHttpRequest;
+		xhr.open("GET", "/api/download-config")
+
+		xhr.onload = function () {
+			if (this.status == 200) {
+				let msg = JSON.parse(this.responseText);
+				window.location.replace(msg.url);
+			} else {
+				let msg = JSON.parse(this.responseText); 
+				toast(msg.msg, "error")
+			}
+		}
+
+		xhr.send();
+	}
+
+	//CHANGE NAME
+	function changeName() {
+	let newName = prompt("New username");
+	if (newName == "" || newName == null) return;
+	if (!confirm(`Confirm your name change to '${newName}'`)) {
+		toast("Cancelled", "success")
+		return ;
+	}
+
+	xhr = new XMLHttpRequest;
+	xhr.open("POST", "/api/change-name");
+
+	xhr.onload = function () {
+		if (this.status == 200) {
+			toast("Username changed", "success");
+		} else {
+			let msg = JSON.parse(this.responseText); 
+			toast(msg.msg, "error");
+		}
+	}
+
+	xhr.send(`{"new_username": "${newName}"}`);
+}
+
+
+//HIDE URL
+let hiddenUrlStatus = false;
+function hideURL() {
+	let h = document.getElementById("HIDEURL");
+	xhr = new XMLHttpRequest;
+	xhr.open("OPTIONS", `/api/hide-url?status=${hiddenUrlStatus}`)
+
+	xhr.onload = function () {
+		if (this.status == 200) {
+			if (hiddenUrlStatus) {
+				hiddenUrlStatus = false;
+				toast("Showing URLs", "success");
+				h.innerHTML = disabled;
+			} else {
+				hiddenUrlStatus = true;
+				toast("Hiding URLs", "success");
+				h.innerHTML = enabled;
+			}
+		}
+	}
+
+	xhr.send()
+}
+
+//LOGOUT
+function logOut() {
+document.cookie = "token="
+window.location.replace("/login")
+}
+
+//DELETE ACCOUNT
+function deleteAcc() {
+	if (!confirm("By deleting your account, you will lose access to Xello.Blue services. You won't be able to join unless you are invited again.")) {
+		toast("Cancelled", "success")
+		return;
+	}
+	let password = prompt("Your Password");
+
+	xhr = new XMLHttpRequest;
+	xhr.open("POST", "/api/terminate");
+
+	xhr.onload = function () {
+		if (this.status == 200) {
+			alert("Account was deleted");
+			window.location.replace("/");
+		} else {
+			let msg = JSON.parse(this.responseText); 
+			toast(msg.msg, "error");
+		}
+	}
+
+	xhr.send(`{"username": "{{user}}", "password": "${password}"}`);
+}
+
+//DOMAIN SETTINGS
+var randomDomain = false;
+function loadDomain() {
+	document.getElementById("domain").value = "{{setting_domain}}";
+	document.getElementById("subdomain").value = "{{setting_subdomain}}"
+	if ("{{setting_random_domain}}".toLowerCase() == "true") {
+		document.getElementById("random-domain").innerHTML = enabled;
+		randomDomain = true;
+	} else {
+		document.getElementById("random-domain").innerHTML = disabled;
+		randomDomain = false;
+	}
+}
+
+function useRandomDomain() {
+	if (randomDomain) {
+		randomDomain = false;
+		document.getElementById("random-domain").innerHTML = disabled;
+	} else {
+		randomDomain = true;
+		document.getElementById("random-domain").innerHTML = enabled;
+	}
+}
+
+function saveDomain() {
+	let domain = document.getElementById("domain").value;
+	let subdomain = document.getElementById("subdomain").value;
+	xhr = new XMLHttpRequest;
+	xhr.open("OPTIONS", "/domain");
+
+	xhr.onload = function () {
+		if (this.status == 200) {
+			let tempsub = sdsub(subdomain)
+			toast("Upload domain changed to "+tempsub+domain, "success");
+		} else {
+			let msg = JSON.parse(this.responseText); 
+			toast(msg.msg, "error");
+		}
+	}
+
+	xhr.send(`{"domain": "${domain}", "subdomain": "${subdomain}", "random": ${randomDomain}}`);
+}
+
+function sdsub(subdomain) {
+	if (subdomain != "") return subdomain+".";
+	return "";
+}
+
+//CHANGE PASSWORD
+function changePassword() {
+	let currentPassword = prompt("Current password")
+	if (currentPassword == "" || currentPassword == null) { return; }
+
+	let newPassword = prompt("New password")
+	if (newPassword == "" || newPassword == null) { return; }
+
+
+	let confirmPassword = prompt("Confirm new password")
+	if (confirmPassword == "" || confirmPassword == null) { return; }
+
+
+	if (newPassword != confirmPassword) {
+		alert("Failed to confirm your new password");
+	} else {
+		xhr = new XMLHttpRequest
+		xhr.open("POST", "/api/change-password")
+
+		xhr.onload = function () {
+			if (this.status == 200) {
+				toast("Password was changed", "success")
+			} else {
+				let msg = JSON.parse(this.responseText); 
+				toast(msg.msg, "error");
+			}
+		}
+
+		xhr.send(`{"current_password": "${currentPassword}", "new_password": "${newPassword}"}`)
+	}
+
+}
+
+//UPLOAD KEY
+function resetKey() {
+	xhr = new XMLHttpRequest();
+	xhr.open('PUT', '/api/reset-key');
+
+	xhr.onload = function () {
+	if (this.status == 200) {
+		toast("API Key was changed", "success");
+		window.location.replace("/login");
+	} else {
+		let msg = JSON.parse(this.responseText); 
+		alert(msg.msg);
+		}
+	};
+
+	xhr.onerror = function () {
+		toast("Failed to refresh the API Key", "error")
+	}
+
+	xhr.send()
+}
+
+function copyUploadKey() {
+	navigator.clipboard.writeText("{{uploadkey}}");
+}
+
+//TOGGLE EMBEDS
+var embedStatus = true;
+function useEmbeds() {
+	m = document.getElementById("EMBED");
+	xhr = new XMLHttpRequest;
+	xhr.open("OPTIONS", `/api/embed?status=${embedStatus}`)
+
+	xhr.onload = function () {
+		if (this.status == 200) {
+			if (embedStatus) {
+				m.innerHTML = disabled;
+				embedStatus = false;
+				toast("Discord Embeds were disabled", "success")
+			} else {
+				m.innerHTML = enabled;
+				embedStatus = true;
+				toast("Discord Embeds were enabled", "success")
+			}   
+		} else {
+			let msg = JSON.parse(this.responseText); 
+			toast(msg.msg, "fail")
+		}
+	}
+
+	xhr.send();
+}
+
+//EMBED SETTINGS
+function saveEmbedSettings() {
+	let description = document.getElementById('embed-description').value;
+	let title = document.getElementById('embed-title').value;
+	let color = document.getElementById('color-picker').value;
+
+	xhr = new XMLHttpRequest();
+	xhr.open("OPTIONS", "/api/embed-config")
+
+	xhr.onload = function() {
+		if (this.status == 200) {
+			toast("Embed settings saved", "success")
+		} else {
+			toast(JSON.parse(this.responseText).msg, "error")
+		}
+	}
+
+	xhr.send(`{"color": "${color}", "title": "${title}", "description": "${description}"}`);
+	
+}
+
+
+//DISCORD VERIFICATION
+function unlinkDiscord() {
+	xhr = new XMLHttpRequest();
+	xhr.open("DELETE", "/oauth2/discord/cancel")
+
+	xhr.onload = function() {
+		if (this.status != 200) {
+			toast(JSON.parse(this.responseText).msg, "error")
+			return
+		}
+		toast("Account unlinked", "success")
+	}
+
+	xhr.send();
+}
+</script>
+
+<script>
+	//PROFILE EDITOR
+
+	//PREVIEW
+	function profilePreview() {
+		let theme = document.getElementById("theme").value;
+		let font = document.getElementById("font").value;
+		let bio = document.getElementById("bio-input").value;
+
+		let url = `/u/preview?theme=${theme}&bio=${bio}&font=${font}&showDiscord=${show_discord}`
+		window.open(url)
+	}
+
+	function saveProfile() {
+		let theme = document.getElementById("theme").value;
+		let font = document.getElementById("font").value;
+		let bio = document.getElementById("bio-input").value;
+
+		var xhr = new XMLHttpRequest;
+		xhr.open("POST", "/api/profile")
+
+		xhr.onload = function () {
+			toast(JSON.parse(this.responseText).msg, "success");
+		}
+
+		xhr.send(`{"theme": "${theme}", "font": "${font}", "bio": "${bio}", "showDiscord": ${show_discord}}`)
+	}
+
+	function copyToClipboard(text) {
+		try {
+			navigator.clipboard.writeText(text);
+			toast("Copied to clipboard", "success");
+		} catch (e) {
+			if (confirm("Confirm to copy text to clipboard")) {
+				copyToClipboard(text);
+			}
+		}
+	}
+</script>
+
+<script>
+	//DRAG AND DROP FILE UPLOAD
+	var file = null
+	function dropHandler(ev) {
+		// Prevent default behavior (Prevent file from being opened)
+		ev.preventDefault();
+
+		file = ev.dataTransfer.files[0];
+
+		droptext(`${file.name} is ready for upload`, false);
+
+		showUploadButton();
+		uploadHandler(file);
+	}
+
+	function dragOverHandler(ev) {
+		droptext("Drop to upload the file");
+
+		// Prevent default behavior (Prevent file from being opened)
+		ev.preventDefault();
+	}
+
+	//DROP INFO BOX
+	function droptext(text, clearAfter=true) {
+		document.getElementById("drop-text").innerText = text;
+
+		if (!clearAfter) {
+			setTimeout(function() {
+				document.getElementById("drop-text").innerText = text; }, 3000);
+		}
+
+		if (clearAfter) {
+			setTimeout(function() {
+				document.getElementById("drop-text").innerText = "Drag & Drop to upload"}, 3000);
+		}
+	}
+
+	function showUploadButton() {
+		document.getElementById("upload-buttons").innerHTML = `
+		<a id="upload-submit" class="upload-button upload-upload"><i class="fa-solid fa-circle-check"></i> Upload</a>
+		<a onclick="cancelUpload()" class="upload-button upload-cancel"><i class="fa-solid fa-circle-xmark"></i> Cancel</a>
+		`;
+		document.getElementById("drop-icon").innerHTML = '<i class="fa-solid fa-file-circle-check"></i>';
+	}
+
+	function hideUploadButton() {
+		document.getElementById("upload-buttons").innerHTML = "";
+		document.getElementById("drop-icon").innerHTML = '<i class="fa-solid fa-file-arrow-up"></i>';
+
+	}
+
+	function showProgressBar() {
+		document.getElementById("upload-buttons").innerHTML = `<div id=upload-bar-wrap>
+			<div id="upload-bar"></div>
+		</div>`;
+	}
+
+	function hideProgressBar() {
+		document.getElementById("upload-buttons").innerHTML = "";
+	}
+
+	async function uploadHandler(uFile) {
+		const ubtn = document.getElementById("upload-submit");
+			
+		ubtn.addEventListener("click", async () => {
+			const formData = new FormData();
+		
+			// Append the file to the FormData object
+			//console.log(uFile)
+			if (!uFile) {
+				toast("Provide a file to upload", "error");
+			}
+			droptext("Please wait, uploading...", false)
+			hideUploadButton();
+			// showProgressBar()
+			formData.append("file", uFile);
+			
+			// send the file to the server
+
+			try {
+				const response = await fetch('/upload/webdashboard', {
+					method: 'POST',
+					body: formData/*,
+					onUploadProgress: (progressEvent) => {
+						const percentComplete = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+						// Update progress bar with percentage complete
+						document.getElementById("upload-bar").style.width = `${percentComplete}%`;
+					}*/
+				});
+				const data = await response.json();
+
+				// hideProgressBar();
+				if (data['success'] == true) {
+					try {
+						copyToClipboard(data['url']);
+						toast("File URL was copied to clipboard", "success");
+					} catch (err) {
+						toast("FAILED TO COPY URL", "success")
+					}
+					droptext("File was uploaded using WDD-1")
+				} else {
+					toast(data['msg'], "error");
+					droptext("File upload failed")
+				}
+			} catch (error) {
+				console.error('Upload Error: ', error);
+			}
+			// fetch('/upload/webdashboard', {
+			//     method: 'POST',
+			//     body: formData
+			// })
+			// .then(response => console.log(response.text()))
+			// .then(data => console.log(data))
+			// .catch(error => console.error(error))
+		})
+	}
+
+	function cancelUpload() {
+		hideUploadButton();
+		droptext("Upload was cancelled")
+	}
+</script>
+
+<script>
+	//GALLERY SCRIPTS
+
+	function openURL(url) {
+		window.open(url);
+	}
+
+	function deleteFile(file) {
+		if (!confirm("Are you sure you want to delete this file? This action can't be undone")) {
+			return;
+		}
+
+		xhr = new XMLHttpRequest();
+		xhr.open("DELETE", "/delete-file/"+file);
+
+		xhr.onload = function() {
+			if (this.status != 200) {
+				toast(JSON.parse(this.responseText).msg, "error");
+				return;
+			}
+
+			toast(file+" was deleted", "success")
+			document.getElementById("fileId-"+file).remove();
+		}
+
+		xhr.send();
+	}
+
+	//DASHBOARD WARN
+	function dismissWarning(id) {
+		document.getElementById("dw-"+id).remove();
+		toast("Alert dismissed", "success");
+	}
+
+</script>
+
+<script defer>
+	
+	// Get the <span> element that closes the modal
+	var span = document.getElementsByClassName("close")[0];
+	
+	// When the user clicks the button, open the modal 
+	function invitesOpen() {
+		modal = document.getElementById("myModal");
+		modal.style.display = "block";
+	}
+	
+	// When the user clicks on <span> (x), close the modal
+	function invitesClose() {
+		modal = document.getElementById("myModal");
+	  	modal.style.display = "none";
+	}
+
+	window.onclick = function(event) {
+  		if (event.target == modal) {
+            modal = document.getElementById("myModal");
+    		modal.style.display = "none";
+  		}
+	}
+</script>
+
+<script src="/utils.js"></script>
+
+<script defer>
+    setTimeout(load, 1);
+</script>
+
+	<!-- PAGE CONTENT -->
+
+    <div id="toastspace"></div>
+	<div class="dash-menu">
+
+        <center>
+            <h1 onclick="window.location.reload()">Xello<span style="color: var(--url);">Blue</span></h1>
+        </center>
+
+        <a href="#" class="tab-link" data-tab="home"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="#" class="tab-link" data-tab="gallery"><i class="fa-solid fa-photo-film"></i> Gallery</a>
+        <a href="#" class="tab-link" data-tab="profile"><i class="fa-solid fa-user"></i> Profile</a>
+        <a href="#" class="tab-link" data-tab="upload-settings"><i class="fa-solid fa-gears"></i> Upload Settings</a>
+        <a href="#" class="tab-link" data-tab="embeds"><i class="fa-solid fa-wand-magic-sparkles"></i> Embeds</a>
+        <a href="#" class="tab-link" data-tab="discord-options"><i class="fa-solid fa-gamepad"></i> Discord Options</a>
+        
+        <br>
+        <div class="separator"></div>
+        <br>
+
+        <a onclick="logOut()" style="color: var(--destructive);"><i class="fa-solid fa-right-from-bracket"></i> Log out</a>
+
+        <center id="drop_zone-wrap">
+            <div id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+                <span id="drop-icon"><i class="fa-solid fa-file-arrow-up"></i></span>
+                <span id="drop-text">Drag & Drop to upload</span>
+            </div>
+        </center>
+        <span id="upload-buttons">
+       
+        </span>
+    </div>
+
+
+	<div id="dash-content">
+		<div class="tab-content active" data-tab="home">
+			<h3>Home</h3>
+			<p id="motd" style="font-size: 13px;">Welcome back, <a href="/u/{{uid}}">{{username}}</a></p>
+			<br>
+			<div class="category-title">PROFILE</div>
+			<div class="box">
+			    <pre>
+<a><i class="fa-solid fa-user"></i> Username</a> {{username}}
+<a><i class="fa-solid fa-hashtag"></i> UID</a> {{uid}}
+<a><i class="fa-solid fa-photo-film"></i> Uploads</a> {{profile_uploads}}
+<a><i class="fa-solid fa-envelope-circle-check"></i> Invited by</a> {{invited_by}}</pre> 
+			</div>
+
+			<br>
+			<div class="category-title">INVITES</div>
+			<div class="box">
+				<button onclick="invitesOpen()" id="myBtn" class="myBtn">Open Invites</button>
+
+				<div id="myModal" class="modal">
+					<!-- Modal content -->
+					<div class="modal-content">
+					  <div class="modal-header">
+						<span class="close" onclick="invitesClose()">&times;</span>
+						<h2>Your Invites</h2>
+					  </div>
+					  <div class="modal-body">
+						<pre>{{invites | safe}}</pre>
+					  </div>
+					</div>
+				  
+				  </div>
+
+			</div>
+
+			<br>
+			<div class="category-title">STATS</div>
+			<div class="box">
+			    <pre>
+<a><i class="fa-solid fa-photo-film"></i> Uploads</a> {{stats_uploads}}
+<a><i class="fa-solid fa-user-group"></i> Users</a> {{stats_users}}</pre>
+			</div>
+
+			<br>
+			<div class="category-title">{{article_title}}</div>
+			<div class="box">
+			    <pre>{{article_spoiler}}</pre>
+			
+			    <button onclick="redirect('/a/{{article_id}}')"><i class="fa-solid fa-eye"></i> View</button>
+			</div>
+		</div>
+
+
+
+		<div class="tab-content" data-tab="gallery">
+			<h3>Gallery</h3>
+			<p id="motd" style="font-size: 13px;">Welcome back, <a href="/u/{{uid}}">{{username}}</a></p>
+			<div class="gallery-media">
+			{{gallery | safe}}
+			</div>
+		</div>
+
+
+		
+		<div class="tab-content" data-tab="profile">
+			<h3>Profile</h3>
+			<p id="motd" style="font-size: 13px;">Welcome back, <a href="/u/{{uid}}">{{username}}</a></p>
+					
+			<br>
+			<div class="category-title">ACCOUNT</div>
+			<div class="box">
+			<pre>
+<a><i class="fa-solid fa-user"></i> Username</a> {{username}}
+<a><i class="fa-solid fa-envelope-open-text"></i> Invited by</a> {{invited_by}} 
+
+<button onclick="changeName()"><i class="fa-solid fa-pen"></i> Change Username</button> <button onclick="changePassword()"><i class="fa-solid fa-unlock"></i> Change Password</button> <button onclick="logOut()" class="destructive"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button> <button onclick="deleteAcc()" class="destructive"><i class="fa-solid fa-trash"></i> Delete Account</button> <button onclick="loadPage('discord')"><i class="fa-solid fa-link"></i>Link Discord</button>
+			</pre>
+			</div>
+			
+			
+			<br>
+			<div class="category-title">PROFILE</div>
+			<div class="box">
+
+			<pre>
+<a><i class="fa-solid fa-envelope-open-text"></i> Bio</a> <input type="text" id="bio-input"> <i style="color: var(--text-dimmed);" class="fa-solid fa-circle-info" title="Open the profile editor to view all of the settings"></i>
+<a><i class="fa-solid fa-palette"></i> Theme</a> <select name="theme" id="theme"> 
+<option value="dark">Dark (default)</option>
+<option value="light">Light</option>
+<option value="wooden">Wooden</option>
+</select>
+<a><i class="fa-solid fa-font"></i> Font</a> <select name="font" id="font">
+<option value="rubik">Rubik (default)</option>
+<option value="ubuntu">Ubuntu</option>
+<option value="kanit">Kanit</option>
+</select>
+
+<button onclick="saveProfile()"><i class="fa-solid fa-circle-check"></i> Save</button> <button onclick="profilePreview()"><i class="fa-solid fa-eye"></i> Preview</button> <button onclick="redirect('/u/editor')"><i class="fa-solid fa-paintbrush"></i> Editor</button></pre>
+			</div>
+		</div>
+
+		<div class="tab-content" data-tab="upload-settings">
+			<h3>Upload Settings</h3>
+			<p id="motd" style="font-size: 13px;">Welcome back, <a href="/u/{{uid}}">{{username}}</a></p>
+
+			<br>
+			<div class="category-title">DOMAIN</div>
+			<div class="box">
+			<pre>
+<a><i class="fa-solid fa-link"></i> Domain</a> <select name="domain" id="domain"> 
+		<option value="xello.blue">xello.blue</option>
+		<option value="ketamine.top">ketamine.top</option>
+		<option value="2u9.me">2u9.me</option>
+		<option value="wumpus.tech">wumpus.tech</option>
+		<option value="guguhack.software">guguhack.software</option>
+		<option value="drifty.wtf">drifty.wtf</option>
+	</select>
+<a><i class="fa-solid fa-pen"></i> Subdomain</a> <input type="text" id="subdomain" name="subdomain">
+<a><i class="fa-solid fa-shuffle"></i> Random domain</a> <span id="random-domain" onclick="useRandomDomain();"></span>
+
+<button onclick="saveDomain()"><i class="fa-solid fa-circle-check"></i> Save</button></pre>
+			        </div>
+				
+			        <br>
+			        <div class="category-title">API</div>
+			        <div class="box">
+			<pre>
+<a><i class="fa-solid fa-key"></i> Upload Key</a> <span class="blurred">{{uploadkey}}</span> <a onclick="copyUploadKey()" title="Copy upload key"><i class="fa-solid fa-copy"></i></a>
+<a><i class="fa-solid fa-link"></i> Raw URL</a> <span id="HIDEURL" onclick="hideURL()" title="Toggle hidden URLs"></span>
+
+<button onclick="resetKey()"><i class="fa-solid fa-arrow-rotate-right"></i> Reset Upload Key</button> <button onclick="downloadConfig()"><i class="fa-solid fa-gears"></i> ShareX Config</button> <button onclick="redirect('https:/\/github.com/ShareX/ShareX/releases/download/v14.1.0/ShareX-14.1.0-setup.exe')"><i class="fa-solid fa-download"></i> Download ShareX</button>
+			</pre>
+			</div>
+		</div>
+
+		<div class="tab-content" data-tab="embeds">
+			<h3>Discord Embeds</h3>
+			<p id="motd" style="font-size: 13px;">Welcome back, <a href="/u/{{uid}}">{{username}}</a></p>
+					
+			<br>
+					
+			<div id="embed">
+			    <span id="content">
+			        <input type="text" id="embed-title" name="embed-title"> <br>
+			        <input type="text" id="embed-description" name="embed-description">
+			        <img src="/discord.png">
+			    </span>
+			</div>
+			
+			<pre><a>Toggled</a> <span id="EMBED" onclick="useEmbeds()" title="Toggle discord embeds"></span>      <a>Color</a> <input type="color" id="color-picker" /></pre>
+			
+			<button onclick="saveEmbedSettings()"><i class="fa-solid fa-circle-check"></i> Save</button>
+		</div>
+
+		<div class="tab-content" data-tab="discord-options">
+			<h3>Discord</h3>
+			<p id="motd" style="font-size: 13px;">Welcome back, <a href="/u/{{uid}}">{{username}}</a></p>
+					
+			<br>
+					
+			<iframe src="https://discord.com/widget?id=1055472203753328701&theme=dark" width="350" height="300" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+					
+					
+			<br><br>
+			<div class="category-title">DISCORD ACCOUNT</div>
+			<div class="box">
+			    <pre><a><i class="fa-solid fa-user"></i> Account</a> <span id="DISCORD-ACCOUNT">{{discord_username}}#{{discord_tag}}</span> <i style="color: var(--text-dimmed);" class="fa-solid fa-circle-info" title="Re-link your discord account to update discord information"></i>
+<button onclick="redirect('/oauth2/discord/link')"><i class="fa-solid fa-link"></i> Link Account</button> <button onclick="unlinkDiscord()"><i class="fa-solid fa-link-slash"></i> Unlink Account</button> <button onclick="verifyDiscord()"><i class="fa-solid fa-user-check"></i> Verify Account</button></pre>
+			</div>
+		</div>
+	</div>
+
+
+	
+	<script>
+		// Get all tab links and add click event listener
+		const tabLinks = document.querySelectorAll('.tab-link');
+		tabLinks.forEach(tabLink => {
+			tabLink.addEventListener('click', event => {
+				event.preventDefault();
+
+				// Get the tab to show
+				const tabToShow = event.target.getAttribute('data-tab');
+
+				// Hide all tab contents 
+                const tabContents = document.querySelectorAll('.tab-content');
+                tabContents.forEach(tabContent => {
+                    tabContent.classList.remove('active');
+                });
+
+                // Show the tab content
+                const tabContentToShow = document.querySelector(`.tab-content[data-tab="${tabToShow}"]`);
+                tabContentToShow.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

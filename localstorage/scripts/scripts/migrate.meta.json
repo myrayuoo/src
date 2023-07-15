@@ -1,0 +1,5 @@
+{
+    "packages": ["base"],
+    "update_url": "",
+    "display_name": "migrate" 
+}

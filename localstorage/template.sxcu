@@ -1,0 +1,14 @@
+{
+  "Name": "Xello.Blue Hosting",
+  "DestinationType": "ImageUploader, FileUploader",
+  "RequestType": "POST",
+  "RequestURL": "https://[[DOMAIN]]/upload",
+  "FileFormName": "image",
+  "Body": "MultipartFormData",
+  "Headers": {
+    "UploadKey": "[[UPLOADKEY]]"
+  },
+  "URL": "$json:imageUrl$",
+  "DeletionURL": "$json:deletionUrl$",
+  "ErrorMessage": "$json:error$"
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <!-- style>
+        @import url("/style.css");
+    </style -->
+
+    <style>
+        html, body {
+            margin: 1vw;
+        }
+    </style>
+
+    <script src="/utils.js"></script>
+
+    <noscript>enable javascripts</noscript>
+
+    <script>
+        function key() {
+            return document.getElementById("apikey").value
+        }
+
+        function postArticle() {
+            xhr = new XMLHttpRequest();
+            xhr.open("POST", `/upload/article?key=${key()}`)
+
+            xhr.onload = function() {
+                alert(xhr.responseText);
+            }
+
+            let title = document.getElementById("title").value;
+            let spoiler = document.getElementById("spoiler").value;
+            let authoruuid = document.getElementById("authoruuid").value;
+            let content = document.getElementById("content").value;
+
+            xhr.send(`{"title": "${title}", "spoiler": "${spoiler}", "authorUUID": "${authoruuid}", "content": "${content}"}`);
+        }
+    </script>
+
+    <img style="width: 300px;" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpurepng.com%2Fpublic%2Fuploads%2Flarge%2F515023057367pjqxmsnx7rgiihwwfa1yopebtptssyevfbjqwwbw8cxyucv6srtcaraobaotirnmd7zjkf3hi7oyexhybu0rkyuafuwk0hnxr5h.png&f=1&nofb=1&ipt=517340687f6c40f8d954e4eaf1e824ec145f3b8066fa08e943877e4fb1cc4310&ipo=images" alt="gato">
+    <h1>CCP SPYWARE DASHBOARD</h1>
+    <img style="width: 50px;" src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.pngall.com%2Fwp-content%2Fuploads%2F2016%2F06%2FChina-Flag-Free-PNG-Image.png&f=1&nofb=1&ipt=a0daedbd5a69d36e1799827da402c408b0c2dafb2059552b0ac7329417664c3e&ipo=images" alt="">
+    <img style="width: 50px;" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.woroni.com.au%2Fwp-content%2Fuploads%2F2018%2F05%2FXi-Jinping_clarence_lee-1200x1200.png&f=1&nofb=1&ipt=2a89c7540671af1649c789cdfc6692d2b4ea6e9477e4affba701fa2231f9d556&ipo=images" alt="">
+    <img style="width: 50px;" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn-0001.qstv.on.epicgames.com%2FFVDAzHWRAFVtYrmfDe%2Fimage%2Fscreen_comp.jpeg&f=1&nofb=1&ipt=db05faf05972598f397527bbce11068ec0ed61a0c7a0dcaa8dda9d4d0719e7a2&ipo=images" alt="">
+    <img style="width: 50px;" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.p-tAex1kyleGRm0smkTXwwHaGC%26pid%3DApi&f=1&ipt=9fa5193fb70547207fa3f4d97dcf181ff4b15ade28a0447c7536c62e3f049108&ipo=images" alt="">
+
+    <br>
+    <span>API KEY:</span>
+    <input id="apikey" type="password">
+
+    <br>
+
+    <hr>
+    <h2 id="users">Users</h2>
+    <li>Amount: {{user_amount}}</li>
+    <button onclick="redirect('/admin/dashboard#umanage')">Manage</button>
+    <hr>
+
+    <br>
+    
+    <hr>
+    <h2 id="articles">Articles</h2>
+    <li>Amount: {{article_amount}}</li>
+    <li>Latest: <a href="/a/{{article_latest_id}}">{{article_latest_title}}</a></li>
+    <li>Pinned: <a href="/a/{{article_pinned_id}}">{{article_pinned_title}}</a></li>
+    <button onclick="redirect('/a')">view all</button>
+
+    <hr>
+
+    <h3 id="article-edit">Write an article</h3>
+
+    <span>author uuid:</span>
+    <input type="text" name="authoruuid" id="authoruuid">
+    <br>
+
+    <span>title: </span>
+    <input type="text" name="title" id="title">
+    <br>
+
+    <span>spoiler:</span>
+    <input style="width: 400px;" type="text" name="spoiler" id="spoiler">
+    <br>
+
+    <span>content:</span>
+    <textarea name="content" id="content" cols="50" rows="1"></textarea>
+    <br>
+    <button onclick="postArticle()">post</button>
+    <br>
+
+    <hr>
+    <br>
+    
+    <hr>
+    <h2 id="invites">Invites</h2>
+<pre>{{invites}}</pre>
+    <hr>
+
+    <br>
+    <br>
+    <br>
+
+    <h2>Manage people (users)</h2>
+    <img style="width: 150px;" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.p-tAex1kyleGRm0smkTXwwHaGC%26pid%3DApi&f=1&ipt=9fa5193fb70547207fa3f4d97dcf181ff4b15ade28a0447c7536c62e3f049108&ipo=images" alt="">
+    <br>
+
+    
+
+    {{user_list | safe}}
+
+</body>
+</html>

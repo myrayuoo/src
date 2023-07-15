@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <head>
+        <meta name="google" content="notranslate">
+            <meta property="og:type" content="website">
+            <meta property="og:title" content="Xello.Blue">
+            <meta property="og:description" content="Dashboard">
+            <meta property="og:image" content="/icon.png">
+            <meta content="#07A1FF" data-react-helmet="true" name="theme-color" />
+    
+            <title>XelloBlue</title>
+            <meta name="description" content="Dashboard">
+            <link rel="icon" href="/icon.png" />
+            <meta property="twitter:image" content="https://cdn.discordapp.com/attachments/795963185231560727/880856367139799060/ba819d4fe9c8967f3f86ffe587db7a96.png" />
+            <script src="https://kit.fontawesome.com/b801578fa3.js" crossorigin="anonymous"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    </head>
+</head>
+<body>
+    <style>
+        @import url('/style.css');
+        html, body {
+            margin: 50px;
+        }
+
+        :root {
+            --accent: rgb(73, 52, 255);
+            --backgroud: rgb(12, 13, 19);
+            --backgroud-dark: rgb(9, 9, 14);
+            --backgroud-light1: rgb(25, 27, 37);
+            --backgroud-light2: rgb(21, 23, 32);
+            --text: rgb(255, 255, 255);
+            --text-dimmed: rgba(255, 255, 255, 0.116);
+            --url: rgb(168, 159, 255);
+            --success: rgb(102, 255, 122);
+            --fail: rgb(255, 129, 129);
+
+            --warning-t3: rgb(255, 0, 0);
+            --warning-t2: rgb(255, 136, 0);
+            --warning-t1: rgb(98, 87, 255);
+            --warning-t0: #6aa84f;
+
+            --destructive: rgb(255, 125, 125);
+
+        }
+
+        #welcome {
+            width: 500px; 
+            height: 600px;
+            margin: 0 auto;
+            display: grid;
+            place-items: center;
+
+            background-color: var(--backgroud-dark);
+            border-radius: .5vw;
+        }
+
+        #controls {
+            bottom: 5px;
+            right: 5px;
+            position: fixed;
+        }
+
+        #page-status {
+            position: fixed;
+            bottom: 5px;
+        }
+    </style>
+
+    <script src="/utils.js"></script>
+
+    <script>
+        var finished = true;
+        //PROFILE
+        function saveProfile() {
+            let theme = document.getElementById("theme").value;
+            let bio = document.getElementById("bio-input").value;
+
+            var xhr = new XMLHttpRequest;
+            xhr.open("POST", "/api/profile")
+
+            xhr.onload = function () {
+                toast("Profile Saved!", "success");
+                finished = true;
+            }
+
+            xhr.send(`{"theme": "${theme}", "font": "kanit", "bio": "${bio}", "showDiscord": false}`)
+        }
+
+    //DISCORD 
+    function linkDiscord() {
+        window.open("/oauth2/discord/link")
+        finished = true;
+    }
+
+    //SHAREX CONFIG
+    function downloadConfig() {
+            xhr = new XMLHttpRequest;
+            xhr.open("GET", "/api/download-config")
+
+            xhr.onload = function () {
+                if (this.status == 200) {
+                    let msg = JSON.parse(this.responseText);
+                    window.open(msg.url);
+                } else {
+                    let msg = JSON.parse(this.responseText); 
+                    toast(msg.msg, "error")
+                }
+            }
+
+            xhr.send();
+        }
+    </script>
+
+    <script>
+        var page0 = `<h1 class="animate__animated animate__jackInTheBox">Welcome <a>{{username}}</a>!</h1>
+<span class="smalltext">We hope you'll like using our services</span>
+
+<br><br>
+<button class="animate__animated animate__fadeIn animate__delay-1s" onclick="next()">Continue</button>
+`;
+        var page1 = `            <h1><a>Make Your Profile Shine!</a></h1>
+<pre>
+<a><i class="fa-solid fa-pen"></i> Bio</a> <input type="text" id="bio-input">
+<a><i class="fa-solid fa-palette"></i> Theme</a> <select name="theme" id="theme"> 
+<option value="dark">Dark (default)</option>
+<option value="light">Light</option>
+<option value="wooden">Wooden</option>
+</select>
+<button onclick="saveProfile()"><i class="fa-solid fa-check-circle"></i> Save</button>
+</pre>`;
+        var page2 = `<h1><a>Connect your Discord!</a></h1>
+
+<p class="smalltext">You'll need to join our discord before connecting an account</p>
+
+<button onclick="redirect('/discord')">Join our discord</button>
+<button onclick="linkDiscord()">Connect</button>`;
+        var page3 = `            <h1><a>Start Uploading!</a></h1>
+<button onclick="redirect('https:/\/github.com/ShareX/ShareX/releases/download/v14.1.0/ShareX-14.1.0-setup.exe')"><i class="fa-solid fa-download"></i> Download ShareX</button>
+<button onclick="downloadConfig()"><i class="fa-solid fa-wrench"></i> Download Config</button>
+<br><br>
+<p>We recommend you reading our <a href="https://xello.blue/a/266193ff-fca9-4b81-b0b0-73fc6d0b4ad2" target="_newtab">upload guide</a></p>
+`;
+        
+        var currentPage = 0;
+        
+        function updatePageState(p) {
+            document.getElementById("page-status").innerText = `${p+1}/4`;
+        }
+
+        function loadPage(p=currentPage) {
+            page = document.getElementById("page");
+            updatePageState(p);
+            finished = false;
+            if (p == 0) {
+                finished = true;
+                page.innerHTML = page0;
+            }
+            if (p == 1) {
+                page.innerHTML = page1;
+            }
+            if (p == 2) {
+                page.innerHTML = page2;
+            }
+            if (p == 3) {
+                finished = true;
+                document.getElementById("continue").innerText = "Finish";
+                document.getElementById("skip").remove();
+                page.innerHTML = page3;
+            } 
+            if (p > 3) {
+                redirect("/dashboard");
+            }
+            
+        }
+
+        function next() {
+            if (!finished) {
+                toast("Complete required tasks before continuing", "error");
+                return;
+            } 
+            currentPage++;
+            loadPage();
+        }
+
+        function skip() {
+            currentPage++;
+            loadPage()
+        }
+    </script>
+
+    <script defer>
+        setTimeout(loadPage, 1);
+    </script>
+
+    <span id="toastspace"></span>
+
+    <div id="welcome">
+        <noscript>Enable JavaScripts to use the page</noscript>
+        
+        <div id="page">
+
+
+        </div>
+
+        <span id="page-status" style="color: var(--url); font-weight: 500;">1/4</span>
+
+        <span id="controls">
+            <button id="skip" onclick="skip()">Skip</button>
+            <button id="continue" onclick="next()">Continue</button>
+        </span>
+    </div>
+
+</body>
+</html>

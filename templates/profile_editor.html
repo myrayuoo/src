@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Editor</title>
+    <link rel="icon" href="/icon.png"/>
+
+    <script src="https://kit.fontawesome.com/b801578fa3.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+<body>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+        @import url("/style.css");
+        @import url('/profile-theme-{{theme}}.css');
+        @import url('/profile.css');
+
+        #bio-input {
+            font-family: '{{font}}' !important;
+        }
+    </style>
+
+    <script>
+        const enabled = '<i class="fa-solid fa-toggle-on enabled"></i>';
+        const disabled = '<i class="fa-solid fa-toggle-off disabled"></i>';
+        var show_discord = false;
+
+        function discordVisibility() {
+            if (show_discord) {
+                show_discord = false;
+                document.getElementById("show-discord").innerHTML = disabled;
+                return;
+            }
+            
+            show_discord = true
+            document.getElementById("show-discord").innerHTML = enabled;
+            
+        }
+
+        function info(msg) {
+            m = document.getElementById("infobox");
+            m.innerText = msg;
+            setTimeout(function() { m.innerHTML = ""; }, 5000);
+        }
+
+        function preview() {
+            let theme = document.getElementById("theme").value;
+            let font = document.getElementById("font").value;
+            let bio = document.getElementById("bio-input").value;
+
+            let url = `/u/preview?theme=${theme}&bio=${bio}&font=${font}&showDiscord=${show_discord}`
+            window.open(url)
+        }
+
+        function save() {
+            let theme = document.getElementById("theme").value;
+            let font = document.getElementById("font").value;
+            let bio = document.getElementById("bio-input").value;
+
+            var xhr = new XMLHttpRequest;
+            xhr.open("POST", "/api/profile")
+
+            xhr.onload = function () {
+                info(JSON.parse(this.responseText).msg);
+            }
+
+            xhr.send(`{"theme": "${theme}", "font": "${font}", "bio": "${bio}", "showDiscord": ${show_discord}}`)
+        }
+
+        function load() {
+            //LOADING BIO
+            let bio = document.getElementById("bio-input");
+            bio.value = "{{bio}}";
+            if (bio.value == "") {
+                bio.value = "No bio"
+            }
+
+            //LOADING DISCORD
+            let discord = document.getElementById("show-discord");
+            if ("{{show_discord}}" == "False") {
+                discord.innerHTML = disabled;
+                show_discord = false;
+            } else {
+                discord.innerHTML = enabled;
+                show_discord = true
+            }
+
+
+        }
+    </script>
+
+    <script defer>
+        setTimeout(load, 1)
+    </script>
+
+    <div id="profile" class="box">
+        <span class="inline-img">
+            <img src="/user.png" id="pfp">
+            <h1>{{username}}</h1>
+
+            <i class="fa-solid fa-circle-info" class="smalltext" style="color: var(--text-dimmed);" title="Connect your discord account to XelloBlue on dashboard to change profile picture"></i>
+
+            <br><br><br>
+            
+            <input type="text" id="bio-input">
+        </span>
+        
+        <section>
+            <br>
+            <a title="Profile theme">Theme</a>
+            <select name="theme" id="theme"> 
+                <option value="dark">Dark (default)</option>
+                <option value="light">Light</option>
+                <option value="wooden">Wooden</option>
+            </select>
+
+            <br>
+            <a title="Text font for bio">Font</a>
+            <select name="font" id="font">
+                <option value="rubik">Rubik (default)</option>
+                <option value="ubuntu">Ubuntu</option>
+                <option value="kanit">Kanit</option>
+            </select>
+
+            <br>
+            <a title="Show discord on profile">Show Discord <span id="show-discord" onclick="discordVisibility()"></span></a>
+            
+
+            <br><br><br>
+            <button onclick="save()"><i class="fa-solid fa-circle-check"></i> Save</button>
+            <button onclick="preview()"><i class="fa-solid fa-eye"></i> Preview</button>
+            <span id="infobox"></span>
+        </section>
+    </div>
+    
+</body>
+</html>

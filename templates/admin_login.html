@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html translate="no">
+    <head>
+        <meta name="google" content="notranslate">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Xello.Blue">
+        <meta property="og:description" content="Invite only image hosting">
+        <meta property="og:image" content="/icon.png">
+        <meta content="#07A1FF" data-react-helmet="true" name="theme-color" />
+
+        <title>XelloBlue</title>
+        <meta name="description" content="Invite only image hosting">
+        <link rel="icon" href="/icon.png" />
+        <meta property="twitter:image" content="https://cdn.discordapp.com/attachments/795963185231560727/880856367139799060/ba819d4fe9c8967f3f86ffe587db7a96.png" />
+        <script src="https://kit.fontawesome.com/b801578fa3.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+        
+    </head>
+    <body>
+        <style>
+            @import url('/style.css');
+            html,body {
+                margin: 5vw;
+                padding-left: 10vw;
+                padding-right: 10vw;
+            }
+        </style>
+
+        <noscript>Please enable javascript in your browser settings to login</noscript>
+        <script>
+            function submit() {
+                let username = document.getElementById("username").value;
+                let password = document.getElementById("password").value;
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/api/admin-login');
+                xhr.onload = function () {
+                if (this.status == 200) {
+                    window.location.replace("/admin/dashboard")
+                } else {
+                    alert(xhr.responseText);
+                    }
+                };
+
+                xhr.onerror = function () {
+                    alert("Failed to login")
+                }
+                xhr.send(`{"username": "${username}", "key": "${password}"}`);
+            }
+        </script>
+
+        <div class="title">
+            <h1 onclick="window.location.replace('/')">Xello<a>Blue</a></h1>
+        </div>
+
+        <div class="centeredbox">
+            <pre style="font-size: .5vw;">
+Username
+<input type="text" name="Username" id="username">
+
+Key
+<input type="password" name="Password" id="password">
+
+<button onclick="submit()">Detonate</button></pre>
+        </div>
+    </body>
+</html>

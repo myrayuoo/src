@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{img}}</title>
+
+    <meta content="{{title}}" property="og:title" />
+    <meta content="{{description}}" property="og:description" />
+    <meta content="https://xello.blue/" property="og:url" />
+    <meta content="{{color}}" data-react-helmet="true" name="theme-color" />
+
+    <meta property="og:video" content="https://ketamine.top/usercontent/{{img}}">
+    <meta property="og:video:type" content="text/html">
+    <meta property="og:video:url" content="https://ketamine.top/usercontent/{{img}}">
+    <meta property="og:type" content="video.other">
+    <meta name="twitter:card" content="player">
+    <meta name="twitter:player:width" content="1280">
+    <meta name="twitter:player:height" content="720">
+    <meta name="twitter:player" content="https://xello.blue/usercontent/{{img}}">
+</head>
+<body>
+    <style>
+        @import url("/style.css");
+
+        .imgcenter img {
+            width: 50%;
+        }
+
+        .imgcenter {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+
+    <div class="imgcenter">
+        <video src="/usercontent/{{img}}" controls>
+        <p>Uploaded by {{username}}</p>
+    </div>
+</body>
+</html>

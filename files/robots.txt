@@ -1,0 +1,7 @@
+User-agent: bluebot
+Disallow: /a/*
+
+User-agent: *
+Allow: /
+
+Sitemap: https://xello.blue/sitemap.xml

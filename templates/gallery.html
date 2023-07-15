@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="google" content="notranslate">
+            <meta property="og:type" content="website">
+            <meta property="og:title" content="Xello.Blue">
+            <meta property="og:description" content="Invite only image hosting">
+            <meta property="og:image" content="/icon.png">
+            <meta content="#07A1FF" data-react-helmet="true" name="theme-color" />
+    
+            <title>XelloBlue</title>
+            <meta name="description" content="Invite only image hosting">
+            <link rel="icon" href="/icon.png" />
+            <meta property="twitter:image" content="https://cdn.discordapp.com/attachments/795963185231560727/880856367139799060/ba819d4fe9c8967f3f86ffe587db7a96.png" />
+            <script src="https://kit.fontawesome.com/b801578fa3.js" crossorigin="anonymous"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    </head>
+<body>
+    <style>
+        @import url("/style.css");
+        html, body {
+            margin: 1vw;
+        }
+    </style>
+
+    <script>
+        const defaultMsg = 'Your <a>Gallery</a>';
+        function motd(msg, type="success") {
+            m = document.getElementById("motd");
+            m.innerHTML = `<span class="${type}" onclick="resetMotd()">`+msg+'</span>';
+            setTimeout(function() { m.innerHTML = defaultMsg; }, 5000);
+        }
+
+        function resetMotd() {
+            document.getElementById("motd").innerHTML = defaultMsg;
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            motd("Copied URL to clipboard")
+        }
+
+        function redirect(url) {
+            window.location.replace(url)
+        }
+
+        function openURL(url) {
+            window.open(url);
+        }
+
+        function deleteFile(file) {
+            if (!confirm("Are you sure you want to delete this file? This action can't be undone")) {
+                return;
+            }
+
+            xhr = new XMLHttpRequest();
+            xhr.open("DELETE", "/delete-file/"+file);
+
+            xhr.onload = function() {
+                if (this.status != 200) {
+                    motd(JSON.parse(this.responseText).msg, "fail");
+                    return;
+                }
+
+                motd(file+" was deleted")
+                document.getElementById("fileId-"+file).remove();
+            }
+
+            xhr.send();
+        }
+
+    </script>
+
+    <center>
+        <h1 onclick="window.location.replace('/dashboard')">Xello<a>Blue</a></h1>
+        <span id="motd">Your <a>Gallery</a></span>
+
+        <br><br>
+        <span>
+            <button onclick="redirect('/dashboard')"><i class="fa-solid fa-wrench"></i> Dashboard</button>
+        </span>
+    </center>
+
+    <div class="gallery-media">
+
+        {{content | safe}}
+
+</body>
+</html>

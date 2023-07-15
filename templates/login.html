@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html translate="no">
+    <head>
+        <meta name="google" content="notranslate">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Xello.Blue">
+        <meta property="og:description" content="Invite only image hosting">
+        <meta property="og:image" content="/icon.png">
+        <meta content="#07A1FF" data-react-helmet="true" name="theme-color" />
+
+        <title>XelloBlue</title>
+        <meta name="description" content="Invite only image hosting">
+        <link rel="icon" href="/icon.png" />
+        <meta property="twitter:image" content="https://cdn.discordapp.com/attachments/795963185231560727/880856367139799060/ba819d4fe9c8967f3f86ffe587db7a96.png" />
+        <script src="https://kit.fontawesome.com/b801578fa3.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+        
+    </head>
+    <body>
+        <style>
+            @import url('/style.css');
+            html,body {
+                margin: 5vw;
+                padding-left: 10vw;
+                padding-right: 10vw;
+            }
+
+            .customLogin {
+                color: var(--text) !important;
+                border-radius: 5px !important;
+                transition: .3s ease-in-out;
+            }
+
+            .customLogin img {
+                width: 20px;
+                float: left;
+            }
+
+            .customLogin:hover {
+                color: rgba(255,255,255,0.75) !important;
+                text-decoration: underline !important;
+            }
+
+            .discordLogin {
+                background-color: #5865f2 !important;
+            }
+
+        </style>
+
+        <noscript>Please enable javascript in your browser settings to login</noscript>
+        <script src="/utils.js"></script>
+        <script>
+            function submit() {
+                let username = document.getElementById("username").value;
+                let password = document.getElementById("password").value;
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/api/login');
+                xhr.onload = function () {
+                if (this.status == 200) {
+                    window.location.replace("/dashboard")
+                } else { 
+                    if (this.status == 204) {
+                        toast("Use link sent to your discord to continue");
+                    } else {
+                        let msg = JSON.parse(this.responseText); 
+                        toast(msg.msg, "error");
+                        }
+                    }
+                };
+
+                xhr.onerror = function () {
+                    toast("Failed to login", "error");
+                }
+                xhr.send(`{"username": "${username}", "password": "${password}"}`);
+            }
+
+            function discordLogin() {
+                window.location.replace("/login/discord");
+            }
+        </script>
+
+        <div id="toastspace"></div>
+
+        <div class="title">
+            <h1 onclick="window.location.replace('/')">Xello<a>Blue</a></h1>
+        </div>
+
+        <div class="centeredbox">
+            <pre style="font-size: .5vw;">
+Username
+<input type="text" name="Username" id="username">
+
+Password
+<input type="password" name="Password" id="password">
+
+<button onclick="submit()">Login</button>
+</pre>
+
+</div>
+        <p style="color: var(--text-dimmed);">Don't have an account? <a style="color: var(--text-dimmed); text-decoration: underline;" href="/register">Sign up</a></p>
+
+        <br>
+        <br>
+
+        <button class="discordLogin customLogin" onclick="discordLogin()" title="Login with Discord"><img src="/discord-white.png"> Login using Discord</button>
+
+
+    </body>
+</html>

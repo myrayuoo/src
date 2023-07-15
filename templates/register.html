@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html translate="no">
+    <head>
+        <meta name="google" content="notranslate">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Xello.Blue">
+        <meta property="og:description" content="Invite only image hosting">
+        <meta property="og:image" content="/icon.png">
+        <meta content="#07A1FF" data-react-helmet="true" name="theme-color" />
+
+        <title>XelloBlue</title>
+        <meta name="description" content="Invite only image hosting">
+        <link rel="icon" href="/icon.png" />
+        <meta property="twitter:image" content="https://cdn.discordapp.com/attachments/795963185231560727/880856367139799060/ba819d4fe9c8967f3f86ffe587db7a96.png" />
+        <script src="https://kit.fontawesome.com/b801578fa3.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    </head>
+    <body>
+        <style>
+            @import url('/style.css');
+            html,body {
+                margin: 5vw;
+                padding-left: 10vw;
+                padding-right: 10vw;
+            }
+        </style>
+        
+        <noscript>Please enable javascript in your browser settings to access our services</noscript>
+
+        <script src="https://www.google.com/recaptcha/api.js?render=6LfdonQkAAAAAKRJpmMat7NTZFMWDoBU3Q_M3NRh"></script>
+        <script>
+            var token = null;
+            grecaptcha.ready(function() {
+                grecaptcha.execute('6LfdonQkAAAAAKRJpmMat7NTZFMWDoBU3Q_M3NRh', {action: 'register'}).then(function(ttoken) {
+                    var token = ttoken;
+            });
+          });
+        </script>
+
+        <script>
+            function submit() {
+                let username = document.getElementById("username").value;
+                let password = document.getElementById("password").value;
+                let invite = document.getElementById("invite").value;
+
+                if (!confirm("By creating an account, you are agreeing to our Terms of Service")) {
+                    alert("Registration cancelled")
+                    return;
+                }
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/api/register');
+                xhr.onload = function () {
+                if (this.status == 200) {
+                    window.location.replace("/welcome")
+                } else {
+                    let msg = JSON.parse(this.responseText); 
+                    alert(msg.msg);
+                    }
+                };
+
+                xhr.onerror = function () {
+                    alert("Failed to register")
+                }
+                xhr.send(`{"username": "${username}", "password": "${password}", "invite": "${invite}", "C-TOKEN": ${token}}`);
+            }
+
+            function init() {
+                var invite = "{{invite_code}}";
+                document.getElementById("invite").value = invite;
+            }
+        </script>
+
+        <script defer>
+            setTimeout(init, 1);
+        </script>
+
+        <div class="title">
+            <h1 onclick="window.location.replace('/')">Xello<a>Blue</a></h1>
+        </div>
+
+        <div class="centeredbox">
+            <pre style="font-size: .5vw;">
+Username
+<input type="text" name="Username" id="username">
+
+Password
+<input type="password" name="Password" id="password">
+
+Invite Code
+<input type="text" name="Invite Code" id="invite">
+
+<button onclick="submit()">Register</button></pre>
+        </div>
+        <p>Already have an account? <a href="/login">Sign in</a></p>
+    </body>
+</html>

@@ -1,0 +1,89 @@
+[
+    {
+        "icon": "code",
+        "label": "Developer",
+        "description": "A member of the development team",
+        "color": "93C47D",
+        "id": "DEVELOPER"
+    },
+    {
+        "icon": "screwdriver-wrench",
+        "label": "Staff",
+        "description": "A staff member",
+        "color": "1493FF",
+        "id": "STAFF"
+    },
+    {
+        "icon": "shield-halved",
+        "label": "Moderator",
+        "description": "A person that moderates the community",
+        "color": "F39700",
+        "id": "MOD"
+    },
+    {
+        "icon": "code-merge",
+        "label": "Contributor",
+        "description": "Someone who helped developing this project",
+        "color": "FF00D3",
+        "id": "CONTRIBUTOR"
+    },
+    {
+        "icon": "flask-vial",
+        "label": "Beta Tester",
+        "description": "A person who tests stuff before its released",
+        "color": "F62E36",
+        "id": "BETAUSER"
+    },
+    {
+        "icon": "bug",
+        "label": "Bug Hunter",
+        "description": "Report at least 10 bugs to get this badge",
+        "color": "FFD966",
+        "id": "BUGHUNTER_LVL1"
+    },
+    {
+        "icon": "gem",
+        "label": "Blue+ Subscriber",
+        "description": "User with Blue+ Subscription",
+        "color": "7A67EE",
+        "id": "PREMIUM_LVL1"
+    },
+    {
+        "icon": "award",
+        "label": "Verified User",
+        "description": "Verified user",
+        "color": "638AFD",
+        "id": "VERIFIED"
+    },
+    {
+        "icon": "user-astronaut",
+        "label": "Early User",
+        "description": "The user who have joined before 5th feb 2023",
+        "color": "CE85FF",
+        "id": "EARLYUSER"
+    },
+    {
+        "icon": "seedling",
+        "label": "Community Volunteer",
+        "description": "A person who helps the community grow",
+        "color": "00ffa8",
+        "id": "COM_VOLUNTEER"
+    },
+    {
+        "icon": "venus",
+        "label": "Lunar",
+        "description": "trans",
+        "color": "FFC0EB",
+        "id": "LUNAR"
+    },
+    {
+        "icon": "expand",
+        "label": "Badge failed to load",
+        "description": "Failed to load the badge",
+        "color": "FF0000",
+        "id": "ERROR"
+    }
+
+    
+    
+]

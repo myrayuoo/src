@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Created using XmlSitemapGenerator.org - Free HTML, RSS and XML sitemap generator-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <url>
+    <loc>https://xello.blue</loc>
+  </url>
+  <url>
+    <loc>https://xello.blue/faq</loc>
+  </url>
+  <url>
+    <loc>https://xello.blue/register</loc>
+  </url>
+  <url>
+    <loc>https://xello.blue/login</loc>
+  </url>
+  <url>
+    <loc>https://xello.blue/dashboard</loc>
+  </url>
+  <url>
+    <loc>https://xello.blue/a</loc>
+  </url>
+  <url>
+    <loc>https://xello.blue/</loc>
+  </url>
+  <url>
+    <loc>https://xello.blue/terms</loc>
+  </url>
+  <url>
+    <loc>https://xello.blue/discord</loc>
+  </url>
+  <url>
+    <loc>https://xello.blue/</loc>
+  </url>
+  <url>
+    <loc>https://xello.blue/u/editor</loc>
+  </url>
+  <url>
+    <loc>https://xello.blue/u/preview</loc>
+  </url>
+</urlset>

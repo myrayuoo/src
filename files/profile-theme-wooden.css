@@ -1,0 +1,14 @@
+:root {
+    --accent: rgb(255, 255, 255);
+    --backgroud: rgb(248, 234, 195);
+    --backgroud-dark: rgb(138, 114, 83);
+    --backgroud-light1: rgb(255, 229, 173);
+    --backgroud-light2: rgb(240, 215, 146);
+    --text: rgb(138, 114, 83);
+    --text-dimmed: rgb(155, 155, 155);
+    --url: rgb(255, 255, 255);
+    --success: rgb(102, 255, 122);
+    --fail: rgb(255, 129, 129);
+
+    --destructive: rgb(255, 125, 125);
+}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xello.Blue</title>
+</head>
+<body>
+    <style>
+        @import url("/style.css");
+    </style>
+    
+    {{msg}}
+
+    <span id="redirectBox" style="color: var(--text-dimmed);"></span>
+
+    <script defer>
+        setTimeout(function() {
+            if ("{{redirect}}" != "") {
+                window.location.replace("{{redirect}}");
+                document.getElementById("redirectBox").innerText = "You will be automatically redirected to {{redirect}} in 3 seconds."
+            }
+        }, 3000)
+    </script>
+
+</body>
+</html>

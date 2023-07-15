@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="google" content="notranslate">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Xello.Blue">
+    <meta property="og:description" content="Dashboard">
+    <meta property="og:image" content="/icon.png">
+    <meta content="#07A1FF" data-react-helmet="true" name="theme-color" />
+
+    <title>XelloBlue</title>
+    <meta name="description" content="Dashboard">
+    <link rel="icon" href="/icon.png" />
+    <meta property="twitter:image" content="https://cdn.discordapp.com/attachments/795963185231560727/880856367139799060/ba819d4fe9c8967f3f86ffe587db7a96.png" />
+    <script src="https://kit.fontawesome.com/b801578fa3.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+<body>
+    <style>
+        @import url("/style.css");
+
+        .box2 {
+            display: flex; flex-wrap: wrap; flex-direction: column; align-items: center;
+        }
+
+        h1 {
+            color: var(--url);
+        }
+
+        .divider {
+            height: 1px;
+            width: 100%;
+            background-color: var(--text-dimmed);
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+
+    <script>
+        function logOut() {
+            if (!confirm("Are you sure you want to log out?")) {
+                return;
+            }
+            document.cookie = "token=";
+            window.location.replace("/");
+        }
+
+        function downloadFiles() {
+            var xhr = new XMLHttpRequest;
+            
+            xhr.open("POST", "/api/my-files");
+
+            xhr.onload = function () {
+                if (this.status != 200) {
+                    toast("Failed to download: " + this.responseText, "error");
+                } else {
+                    toast("Downloading...", "success");
+                    window.open(JSON.parse(this.responseText).zip);
+                }
+            }
+
+            xhr.send();
+        }
+    </script>
+
+    <script src="/utils.js"></script>
+
+    <div id="toastspace"></div>
+
+    <div class="box2">
+        <h1 style="font-size: 50px;">Xello.Blue</h1>
+        <p style="width: 50%;">
+            
+        Dear Xello.blue Users,
+        <br><br>
+        We have an important announcement to make. Xello.blue file sharing service, will be discontinuing its operations. However, we have an exciting alternative for you: Sharify.in, a robust file sharing platform that will provide an enhanced experience.
+        <br><br> 
+        To make the transition from our file sharing service to Sharify.in, copy your invitation code and create an account.
+        <br><br> 
+        We appreciate your support and apologize for any inconvenience caused. Thank you for being a member of the Xello.blue community.
+
+        <br><br>
+        Best regards,
+        <br>
+        The Xello.blue Team</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="box2">
+        <h1>Migration to Sharify</h1>
+
+        <h3>Invite code  <span class="box" style="font-family: monospace; font-weight: 100; margin-left: 10px; user-select: all;">{{invite}}</span></h3>
+        <h3>Registration <button style="margin-left: 10px;" onclick="redirect('{{sharify_login}}')">Create Sharify Account</button></h3>
+
+        <p style="max-width: 50%;">To migrate to sharify, you'll need to copy the invitation code above. After that you can create your account <a href="{{sharify_login}}">here</a></p>
+    </div>
+
+    <div style="position: absolute; top: 10px; right: 10px;">
+        <button style="width: 100px; color: var(--fail)" onclick="logOut()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="box2">
+        <p  style="max-width: 50%;">Xello.Blue will be fully functional until the 7th of August 2023. You will be able to access the dashboard and upload your files.</p>
+
+        <div>
+            <button onclick="redirect('/dashboard2')">Open Dashboard</button>
+            <button onclick="downloadFiles()">Download my files</button>
+        </div>
+    </div>
+
+</body>
+</html>

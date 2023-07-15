@@ -1,0 +1,47 @@
+/* User profile */
+
+.inline-img * {
+    display: inline;
+    vertical-align: middle;
+}
+
+#profile {
+    margin: 5vw;
+    padding: 5vw;
+}
+
+#profile h1 {
+    padding: 1vw;
+    color: var(--url);
+}
+
+#profile #bio {
+    display: grid;
+    border-radius: 1vw;
+    padding: .5vw;
+    background-color: var(--backgroud-light1);
+}
+
+#profile #pfp {
+    width: 50px;
+    border-radius: 50%;
+}
+
+#profile #discord {
+    float: right;
+    width: 30px;
+}
+
+/* Profile editor */
+
+#profile #bio-input {
+    display: grid;
+    border-radius: 1vw;
+    padding: .5vw;
+    width: 100%;
+    background-color: var(--backgroud-light1);
+}
+
+section * {
+    margin: .1vw;
+}
