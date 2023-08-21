@@ -1,6 +1,9 @@
 # Xello.Blue
 documentation for certain features can be found [here](<https://github.com/Xello-Blue/docs/tree/main>) (may be outdated)
 
+# Disclaimer
+The efficienty and readability of the code is not optimal. Documentation may be outdated
+
 # Setup
 ### Requirements:
 1. Python 3.10+ ([download here](<https://www.python.org/downloads/>))
@@ -41,7 +44,7 @@ documentation for certain features can be found [here](<https://github.com/Xello
 3. Copy secret key
 
 ## API Key
-• Located at "localstorage/apikey"
+• Located at ".localstorage/apikey"
 Change it to whatever you want
 
 ## Admin Credentials
